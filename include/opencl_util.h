@@ -47,14 +47,21 @@ extern "C" {
    * Checks err against CL_SUCCESS and in case of failure, prints error code as
    * text, followed by msg.
    */
-  void err_warn(cl_int err, const char *msg);
+  void err_warn(cl_int err, const char *msg, ...);
 
   /**
    * err_exit
    *
    * Like err warn, but exits with EXIT_FAILURE
    */
-  void err_exit(cl_int err, const char *msg);
+  void err_exit(cl_int err, const char *msg, ...);
+
+  /**
+   * info_dump
+   *
+   * Iterates each platform on the system and prints out available information.
+   */
+  void info_dump();
 
 #ifdef __cplusplus
 }

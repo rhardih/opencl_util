@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <search.h>
+#include <stdarg.h>
+
+#define asize(arr, type) (sizeof(arr) / sizeof(type))
 
 typedef struct {
   cl_int value;
@@ -71,31 +74,96 @@ ocl_const_t lu_cl_error_codes[] = {
   { CL_INVALID_DEVICE_PARTITION_COUNT, "CL_INVALID_DEVICE_PARTITION_COUNT" },
 };
 
-void err_warn(cl_int err, const char *msg)
+ocl_const_t lu_cl_platform_info[] = {
+  { CL_PLATFORM_PROFILE, "CL_PLATFORM_PROFILE" },
+  { CL_PLATFORM_VERSION, "CL_PLATFORM_VERSION" },
+  { CL_PLATFORM_NAME, "CL_PLATFORM_NAME" },
+  { CL_PLATFORM_VENDOR, "CL_PLATFORM_VENDOR" },
+  { CL_PLATFORM_EXTENSIONS, "CL_PLATFORM_EXTENSIONS" }
+};
+
+static void err_common(cl_int err, const char *msg, va_list ap)
+{
+  size_t count = sizeof(lu_cl_error_codes) / sizeof(ocl_const_t);
+  const char *name;
+
+  for (size_t i = 0; i < count; ++i)
+  {
+    if (lu_cl_error_codes[i].value == err)
+    {
+      name = lu_cl_error_codes[i].name;
+      break;
+    }
+  }
+
+  printf("Error(%s): ", name);
+  vprintf(msg, ap);
+}
+
+void err_warn(cl_int err, const char *msg, ...)
 {
   if (err != CL_SUCCESS)
   {
-    size_t count = sizeof(lu_cl_error_codes) / sizeof(ocl_const_t);
-    const char *name;
-
-    for (size_t i = 0; i < count; ++i)
-    {
-      if (lu_cl_error_codes[i].value == err)
-      {
-        name = lu_cl_error_codes[i].name;
-        break;
-      }
-    }
-
-    printf("Error(%s): %s\n", name, msg); \
+    va_list ap;
+    va_start(ap, msg);
+    err_common(err, msg, ap);
+    va_end(ap);
   }
 }
 
-void err_exit(cl_int err, const char *msg)
+void err_exit(cl_int err, const char *msg, ...)
 {
   if (err != CL_SUCCESS)
   {
-    err_warn(err, msg);
+    va_list ap;
+    va_start(ap, msg);
+    err_common(err, msg, ap);
+    va_end(ap);
     exit(EXIT_FAILURE);
   }
+}
+
+void info_dump()
+{
+  cl_int err;
+  cl_platform_id *platform_ids = NULL;
+  cl_uint platform_ids_size;
+  size_t i, j;
+  char *char_ptr = NULL;
+  size_t char_ptr_size;
+
+  err = clGetPlatformIDs(0, NULL, &platform_ids_size);
+  err_exit(err, "Failed clGetPlatformIDs");
+
+  platform_ids = (cl_platform_id *)malloc(platform_ids_size *
+      sizeof(cl_platform_id));
+
+  err = clGetPlatformIDs(platform_ids_size, platform_ids, NULL);
+
+  printf("Found %u OpenCL platforms.\n", platform_ids_size);
+
+  for (i = 0; i < platform_ids_size; ++i)
+  {
+    printf("Platform[%zu]:\n", i);
+
+    for (j = 0; j < asize(lu_cl_platform_info, ocl_const_t); ++j)
+    {
+      ocl_const_t tmp = lu_cl_platform_info[j];
+
+      err = clGetPlatformInfo(platform_ids[i], tmp.value, 0, NULL,
+          &char_ptr_size);
+      err_exit(err, "Failed clGetPlatformInfo(%s)\n", tmp.name);
+
+      char_ptr = (char *)realloc(char_ptr, char_ptr_size * sizeof(char));
+
+      err = clGetPlatformInfo(platform_ids[i], tmp.value, char_ptr_size,
+          char_ptr, NULL);
+      err_exit(err, "Failed clGetPlatformInfo(%s)\n", tmp.name);
+
+      printf("%s : %s\n", tmp.name, char_ptr);
+    }
+  }
+
+  free(char_ptr);
+  free(platform_ids);
 }
