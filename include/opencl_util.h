@@ -45,7 +45,8 @@ extern "C" {
    * ocu_err_warn
    *
    * Checks err against CL_SUCCESS and in case of failure, prints error code as
-   * text, followed by msg.
+   * text, followed by msg. Treat msg as a variadic string format in the style
+   * of printf.
    */
   void ocu_err_warn(cl_int err, const char *msg, ...);
 
