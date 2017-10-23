@@ -585,3 +585,102 @@ void ocu_info_dump()
   free(device_ids);
   free(platform_ids);
 }
+
+static const ocl_const_uint_t lu_cl_channel_order[] = {
+	{ CL_R, "CL_R" },
+	{ CL_A, "CL_A" },
+	{ CL_RG, "CL_RG" },
+	{ CL_RA, "CL_RA" },
+	{ CL_RGB, "CL_RGB" },
+	{ CL_RGBA, "CL_RGBA" },
+	{ CL_BGRA, "CL_BGRA" },
+	{ CL_ARGB, "CL_ARGB" },
+	{ CL_INTENSITY, "CL_INTENSITY" },
+	{ CL_LUMINANCE, "CL_LUMINANCE" },
+	{ CL_Rx, "CL_Rx" },
+	{ CL_RGx, "CL_RGx" },
+	{ CL_RGBx, "CL_RGBx" },
+	{ CL_DEPTH, "CL_DEPTH" },
+	{ CL_DEPTH_STENCIL, "CL_DEPTH_STENCIL" },
+};
+
+static const ocl_const_uint_t lu_cl_channel_type[] = {
+	{ CL_SNORM_INT8, "CL_SNORM_INT8" },
+	{ CL_SNORM_INT16, "CL_SNORM_INT16" },
+	{ CL_UNORM_INT8, "CL_UNORM_INT8" },
+	{ CL_UNORM_INT16, "CL_UNORM_INT16" },
+	{ CL_UNORM_SHORT_565, "CL_UNORM_SHORT_565" },
+	{ CL_UNORM_SHORT_555, "CL_UNORM_SHORT_555" },
+	{ CL_UNORM_INT_101010, "CL_UNORM_INT_101010" },
+	{ CL_SIGNED_INT8, "CL_SIGNED_INT8" },
+	{ CL_SIGNED_INT16, "CL_SIGNED_INT16" },
+	{ CL_SIGNED_INT32, "CL_SIGNED_INT32" },
+	{ CL_UNSIGNED_INT8, "CL_UNSIGNED_INT8" },
+	{ CL_UNSIGNED_INT16, "CL_UNSIGNED_INT16" },
+	{ CL_UNSIGNED_INT32, "CL_UNSIGNED_INT32" },
+	{ CL_HALF_FLOAT, "CL_HALF_FLOAT" },
+	{ CL_FLOAT, "CL_FLOAT" },
+	{ CL_UNORM_INT24, "CL_UNORM_INT24" },
+};
+
+static void pr_cl_image_format(const char *name, void *value_ptr)
+{
+  cl_image_format value = *(cl_image_format *)value_ptr;
+
+  printf("%s: {\n", name);
+  printf("  image_channel_order: ");
+  pr_cl_uint_lookup(value.image_channel_order, lu_cl_channel_order,
+      asize(lu_cl_channel_order, ocl_const_uint_t));
+  printf("  image_channel_data_type: ");
+  pr_cl_uint_lookup(value.image_channel_data_type, lu_cl_channel_type,
+      asize(lu_cl_channel_type, ocl_const_uint_t));
+  printf("}\n");
+}
+
+static void pr_ptr(const char *name, void *value_ptr)
+{
+  printf("%s: %p\n", name, value_ptr);
+}
+
+static const ocl_const_uint_t lu_cl_image_info[] = {
+	{ CL_IMAGE_FORMAT, "CL_IMAGE_FORMAT", pr_cl_image_format },
+	{ CL_IMAGE_ELEMENT_SIZE, "CL_IMAGE_ELEMENT_SIZE", pr_size_t },
+	{ CL_IMAGE_ROW_PITCH, "CL_IMAGE_ROW_PITCH", pr_size_t },
+	{ CL_IMAGE_SLICE_PITCH, "CL_IMAGE_SLICE_PITCH", pr_size_t },
+	{ CL_IMAGE_WIDTH, "CL_IMAGE_WIDTH", pr_size_t },
+	{ CL_IMAGE_HEIGHT, "CL_IMAGE_HEIGHT", pr_size_t },
+	{ CL_IMAGE_DEPTH, "CL_IMAGE_DEPTH", pr_size_t },
+	{ CL_IMAGE_ARRAY_SIZE, "CL_IMAGE_ARRAY_SIZE", pr_size_t },
+	{ CL_IMAGE_BUFFER, "CL_IMAGE_BUFFER", pr_ptr },
+	{ CL_IMAGE_NUM_MIP_LEVELS, "CL_IMAGE_NUM_MIP_LEVELS", pr_cl_uint },
+	{ CL_IMAGE_NUM_SAMPLES, "CL_IMAGE_NUM_SAMPLES", pr_cl_uint },
+  //{ CL_IMAGE_D3D10_SUBRESOURCE_KHR, "CL_IMAGE_D3D10_SUBRESOURCE_KHR" },
+  //{ CL_IMAGE_D3D11_SUBRESOURCE_KHR, "CL_IMAGE_D3D11_SUBRESOURCE_KHR" },
+  //{ CL_IMAGE_DX9_MEDIA_PLANE_KHR, "CL_IMAGE_DX9_MEDIA_PLANE_KHR" },
+};
+
+void ocu_image_info(cl_mem img)
+{
+  cl_int err;
+  void *info = NULL;
+  size_t info_size;
+
+  printf("Image info for cl_mem %p :\n", img);
+
+  for (size_t i = 0; i < asize(lu_cl_image_info, ocl_const_uint_t); ++i)
+  {
+    ocl_const_uint_t img_inf = lu_cl_image_info[i];
+
+    err = clGetImageInfo(img, img_inf.value, 0, NULL, &info_size);
+    ocu_err_exit(err, "Failed clGetImageInfo(%s)\n", img_inf.name);
+
+    info = realloc(info, info_size);
+
+    err = clGetImageInfo(img, img_inf.value, info_size, info, NULL);
+    ocu_err_exit(err, "Failed clGetImageInfo(%s)\n", img_inf.name);
+
+    img_inf.printer(img_inf.name, info, info_size);
+  }
+
+  free(info);
+}
