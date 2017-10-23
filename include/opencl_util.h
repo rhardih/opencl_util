@@ -42,28 +42,28 @@ extern "C" {
 #endif
 
   /**
-   * err_warn
+   * ocu_err_warn
    *
    * Checks err against CL_SUCCESS and in case of failure, prints error code as
    * text, followed by msg.
    */
-  void err_warn(cl_int err, const char *msg, ...);
+  void ocu_err_warn(cl_int err, const char *msg, ...);
 
   /**
-   * err_exit
+   * ocu_err_exit
    *
    * Like err warn, but exits with EXIT_FAILURE
    */
-  void err_exit(cl_int err, const char *msg, ...);
+  void ocu_err_exit(cl_int err, const char *msg, ...);
 
   /**
-   * info_dump
+   * ocu_info_dump
    *
    * Iterates each platform, as well as all devices for each platform, on the
    * system and prints out all obtainable information from clGetPlatformInfo and
    * clGetDeviceInfo.
    */
-  void info_dump();
+  void ocu_info_dump();
 
 #ifdef __cplusplus
 }

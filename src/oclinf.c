@@ -4,7 +4,7 @@
 
 int main(int argc, char const *argv[])
 {
-  info_dump();
+  ocu_info_dump();
 
   return 0;
 }
