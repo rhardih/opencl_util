@@ -59,7 +59,9 @@ extern "C" {
   /**
    * info_dump
    *
-   * Iterates each platform on the system and prints out available information.
+   * Iterates each platform, as well as all devices for each platform, on the
+   * system and prints out all obtainable information from clGetPlatformInfo and
+   * clGetDeviceInfo.
    */
   void info_dump();
 
