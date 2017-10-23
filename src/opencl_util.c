@@ -684,3 +684,36 @@ void ocu_image_info(cl_mem img)
 
   free(info);
 }
+
+static const ocl_const_uint_t lu_cl_command_queue_info[] = {
+  { CL_QUEUE_CONTEXT, "CL_QUEUE_CONTEXT", pr_ptr },
+  { CL_QUEUE_DEVICE, "CL_QUEUE_DEVICE", pr_ptr },
+  { CL_QUEUE_REFERENCE_COUNT, "CL_QUEUE_REFERENCE_COUNT", pr_cl_uint },
+  { CL_QUEUE_PROPERTIES, "CL_QUEUE_PROPERTIES", pr_cl_command_queue_properties },
+};
+
+void ocu_queue_info(cl_command_queue q)
+{
+  cl_int err;
+  void *info = NULL;
+  size_t info_size;
+
+  printf("Queue info for cl_command_queue %p :\n", q);
+
+  for (size_t i = 0; i < asize(lu_cl_command_queue_info, ocl_const_uint_t); ++i)
+  {
+    ocl_const_uint_t q_inf = lu_cl_command_queue_info[i];
+
+    err = clGetCommandQueueInfo(q, q_inf.value, 0, NULL, &info_size);
+    ocu_err_exit(err, "Failed clGetCommandQueueInfo(%s)\n", q_inf.name);
+
+    info = realloc(info, info_size);
+
+    err = clGetCommandQueueInfo(q, q_inf.value, info_size, info, NULL);
+    ocu_err_exit(err, "Failed clGetCommandQueueInfo(%s)\n", q_inf.name);
+
+    q_inf.printer(q_inf.name, info, info_size);
+  }
+
+  free(info);
+}

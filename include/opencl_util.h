@@ -73,6 +73,14 @@ extern "C" {
    */
   void ocu_image_info(cl_mem img);
 
+  /**
+   * ocu_queue_info
+   *
+   * Prints available information from clGetCommandQueueInfo for a
+   * cl_command_queue  instance.
+   */
+  void ocu_queue_info(cl_command_queue q);
+
 #ifdef __cplusplus
 }
 #endif
