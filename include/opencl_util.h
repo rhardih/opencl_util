@@ -65,6 +65,13 @@ extern "C" {
    */
   void ocu_info_dump();
 
+  /**
+   * ocu_image_info
+   *
+   * Prints available information from clGetImageInfo for a cl_mem instance.
+   */
+  void ocu_image_info(cl_mem img);
+
 #ifdef __cplusplus
 }
 #endif
