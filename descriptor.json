@@ -1,0 +1,30 @@
+{
+	"package": {
+		"name": "libopencl_util.so",
+		"repo": "opencl_util",
+		"subject": "rhardih",
+		"desc": "Travis build artifact",
+		"website_url": "https://github.com/rhardih/opencl_util",
+		"issue_tracker_url": "https://github.com/rhardih/opencl_util/issues",
+		"vcs_url": "https://github.com/rhardih/opencl_util.git",
+		"licenses": ["MIT"],
+		"labels": ["opencl", "opencl_util"],
+		"public_download_numbers": false,
+		"public_stats": false
+	},
+
+	"version": {
+		"name": "1.0.0",
+		"released": "2017-10-23",
+		"gpgSign": false
+	},
+
+	"files":
+	[
+		{
+			"includePattern": "lib/(.*)", "uploadPattern": "$1",
+			"matrixParams": { "override": 1 }
+		}
+	],
+	"publish": true
+}

@@ -1,0 +1,17 @@
+language: android
+android:
+  components:
+    - build-tools-26.0.0
+    - android-25
+sudo: required
+script:
+  - make lib
+  - ls lib
+before_install:
+  - sudo apt-get install -qq ocl-icd-opencl-dev
+deploy:
+  provider: bintray
+  file: descriptor.json
+  user: rhardih
+  key:
+    secure: L+pIjMw+549zenlSwe0YBRqKsfzk5CJ28s1gBcjqYJw5KvQogX8AtCd2qk31BU6syPI9H0sq6cqOaz1KK61CItbmr16Vm/OxUAreU6zH/aiPF/0q3EKLQXH6MIAYC8DXv+DI96hq7fR82/4nJ1gG8Xj2iniDjSUt57pvC9sGODVcQcEEH71AT4mZ3NkBBrgxcSyKsnxZ6rAtph+6oHMchSuz5MtlgoOnGG+ahzfw4IGC4zMFZRF75nXJ14CzWzKR8sgp3mdVoNTzTSGeiZu5l5O/WiaLfwNqAD8WCjhDvAJw9Nie4HSy90KWV//9yo1CQcncONLqEZqZJIvXonD1CPb2u0GVp2w4Ag5NiaNZi601R6rQ3DH8m0JYZzqHseyKBf7RBbvYcNHzufwo9tdFMEf2rlfAKe/WWfFScBPUoC02syIqClOvXFp8BNGJoKM2glhtNKwRUkzEXQL6qlf2g301Sr7Srf/g14+SyRozK9tUr9mMkxR9jjjYAFSslVt4QgYHwpwhMHHqynU+5QS6c3x3PqcQVMgz/bIiPiB5r4+DU9iTdsPT9umNPyGxVDS4c+j0CNbsXnP4CH2CWAXnEI7vcaAMLj1PB3fx44UtQPl1sazgE0nCpxPiXqV7QYvtnZmINEBcOQLFrL+iAViQgYpEMLINMeVpk9kz/wvBfsk=
