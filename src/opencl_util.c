@@ -503,15 +503,61 @@ void ocu_err_exit(cl_int err, const char *msg, ...)
   }
 }
 
+void ocu_platform_info(cl_platform_id p_id)
+{
+  cl_int err;
+  char *info = NULL;
+  size_t info_size;
+
+  for (size_t i = 0; i < asize(lu_cl_platform_info, ocl_const_uint_t); ++i)
+  {
+    ocl_const_uint_t pl_inf = lu_cl_platform_info[i];
+
+    err = clGetPlatformInfo(p_id, pl_inf.value, 0, NULL, &info_size);
+    ocu_err_exit(err, "Failed clGetPlatformInfo(%s)\n", pl_inf.name);
+
+    info = realloc(info, info_size);
+
+    err = clGetPlatformInfo(p_id, pl_inf.value, info_size, info, NULL);
+    ocu_err_exit(err, "Failed clGetPlatformInfo(%s)\n", pl_inf.name);
+
+    printf("%s : %s\n", pl_inf.name, info);
+  }
+
+  free(info);
+}
+
+void ocu_device_info(cl_device_id d_id)
+{
+  cl_int err;
+  void *info = NULL;
+  size_t info_size;
+
+  for (size_t i = 0; i < asize(lu_cl_device_info, ocl_const_uint_t); ++i)
+  {
+    ocl_const_uint_t d_inf = lu_cl_device_info[i];
+
+    err = clGetDeviceInfo(d_id, d_inf.value, 0, NULL, &info_size);
+    ocu_err_exit(err, "clGetDeviceInfo(%s)\n", d_inf.name);
+
+    info = realloc(info, info_size);
+
+    err = clGetDeviceInfo(d_id, d_inf.value, info_size, info, NULL);
+    ocu_err_exit(err, "clGetDeviceInfo(%s)\n", d_inf.name);
+
+    d_inf.printer(d_inf.name, info, info_size);
+  }
+
+  free(info);
+}
+
 void ocu_info_dump()
 {
   cl_int err;
   cl_platform_id *platform_ids = NULL;
   cl_device_id *device_ids = NULL;
   cl_uint platform_ids_size, device_ids_size;
-  size_t i, j, k;
-  void *info = NULL;
-  size_t info_size;
+  size_t i, j;
 
   err = clGetPlatformIDs(0, NULL, &platform_ids_size);
   ocu_err_exit(err, "Failed clGetPlatformIDs");
@@ -528,22 +574,7 @@ void ocu_info_dump()
   {
     printf("Platform[%zu]:\n", i);
 
-    for (j = 0; j < asize(lu_cl_platform_info, ocl_const_uint_t); ++j)
-    {
-      ocl_const_uint_t pl_inf = lu_cl_platform_info[j];
-
-      err = clGetPlatformInfo(platform_ids[i], pl_inf.value, 0, NULL,
-          &info_size);
-      ocu_err_exit(err, "Failed clGetPlatformInfo(%s)\n", pl_inf.name);
-
-      info = realloc(info, info_size);
-
-      err = clGetPlatformInfo(platform_ids[i], pl_inf.value, info_size, info,
-          NULL);
-      ocu_err_exit(err, "Failed clGetPlatformInfo(%s)\n", pl_inf.name);
-
-      printf("%s : %s\n", pl_inf.name, info);
-    }
+    ocu_platform_info(platform_ids[i]);
 
     // Device info
     err = clGetDeviceIDs(platform_ids[i], CL_DEVICE_TYPE_ALL, 0, NULL,
@@ -563,25 +594,10 @@ void ocu_info_dump()
     {
       printf("Device[%zu]:\n", j);
 
-      for (k = 0; k < asize(lu_cl_device_info, ocl_const_uint_t); ++k)
-      {
-        ocl_const_uint_t d_inf = lu_cl_device_info[k];
-
-        err = clGetDeviceInfo(device_ids[j], d_inf.value, 0, NULL, &info_size);
-        ocu_err_exit(err, "clGetDeviceInfo(%s)\n", d_inf.name);
-
-        info = realloc(info, info_size);
-
-        err = clGetDeviceInfo(device_ids[j], d_inf.value, info_size, info,
-            NULL);
-        ocu_err_exit(err, "clGetDeviceInfo(%s)\n", d_inf.name);
-
-        d_inf.printer(d_inf.name, info, info_size);
-      }
+      ocu_device_info(device_ids[j]);
     }
   }
 
-  free(info);
   free(device_ids);
   free(platform_ids);
 }

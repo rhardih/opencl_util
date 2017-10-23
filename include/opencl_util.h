@@ -67,6 +67,22 @@ extern "C" {
   void ocu_info_dump();
 
   /**
+   * ocu_platform_info
+   *
+   * Prints available information from clGetPlatformInfo for a cl_platform_id
+   * instance.
+   */
+  void ocu_platform_info(cl_platform_id p_id);
+
+  /**
+   * ocu_device_info
+   *
+   * Prints available information from clGetDeviceInfo for a cl_device_id
+   * instance.
+   */
+  void ocu_device_info(cl_device_id d_id);
+
+  /**
    * ocu_image_info
    *
    * Prints available information from clGetImageInfo for a cl_mem instance.
