@@ -1,5 +1,12 @@
 CC = gcc
 CFLAGS = -std=c99
+OS = $(shell uname)
+
+ifeq ($(OS), Darwin)
+	LIBS = -framework OpenCL
+else
+	LIBS = -l OpenCL
+endif
 
 all: lib
 
@@ -7,7 +14,7 @@ debug: CFLAGS += -g
 debug: lib
 
 lib: opencl_util.o out_dirs
-	$(CC) $(CFLAGS) -Wall -shared -framework OpenCL -o lib/libopencl_util.so opencl_util.o
+	$(CC) $(CFLAGS) $(LIBS) -Wall -shared -o lib/libopencl_util.so opencl_util.o
 
 opencl_util.o: include/opencl_util.h src/opencl_util.c
 	$(CC) $(CFLAGS) -fPIC -c -Iinclude src/opencl_util.c
