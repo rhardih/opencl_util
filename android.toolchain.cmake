@@ -1,0 +1,14 @@
+if(NOT DEFINED ENV{ANDROID_NDK_ROOT})
+message(FATAL_ERROR "\nPlease set ANDROID_NDK_ROOT environment variable.\n")
+endif()
+
+if(NOT DEFINED ENV{OPENCL_HEADERS})
+message(FATAL_ERROR "\nPlease set OPENCL_HEADERS environment variable.\n")
+endif()
+
+set(CMAKE_SYSTEM_NAME Android)
+set(CMAKE_SYSTEM_VERSION 21)
+set(CMAKE_ANDROID_ARCH_ABI armeabi-v7a)
+set(CMAKE_ANDROID_NDK $ENV{ANDROID_NDK_ROOT})
+set(CMAKE_ANDROID_STL_TYPE gnustl_static)
+set(OPENCL_HEADERS $ENV{OPENCL_HEADERS})
