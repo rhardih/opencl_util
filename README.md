@@ -115,3 +115,7 @@ From here, there's two places the library can be moved to.
 
 With 1. you avoid "polluting" your toolchain, but with 2. you can reuse it for
 other lookups.
+
+## License
+
+MIT - [https://rhardih.mit-license.org](https://rhardih.mit-license.org/)
