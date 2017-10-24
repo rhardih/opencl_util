@@ -9,9 +9,38 @@ See [opencl_util.h](https://github.com/rhardih/opencl_util/blob/master/include/o
 
 ## Examples
 
+### oclinf
+
+There's a small example program included, which just calls `ocu_info_dump()` and
+then exits. It should be present in the build folder after a successful `make`.
+
+Example output abbreviated:
+
+```bash
+$ ./oclinf
+Found 1 OpenCL platforms.
+Platform[0]:
+CL_PLATFORM_PROFILE : FULL_PROFILE
+CL_PLATFORM_VERSION : OpenCL 1.2 (May 26 2017 12:59:48)
+CL_PLATFORM_NAME : Apple
+CL_PLATFORM_VENDOR : Apple
+CL_PLATFORM_EXTENSIONS : cl_APPLE_SetMemObjectDestructor
+cl_APPLE_ContextLoggingFunctions cl_APPLE_clut cl_APPLE_query_kernel_names
+cl_APPLE_gl_sharing cl_khr_gl_event
+Found 2 devices for Platform[0]
+Device[0]:
+CL_DEVICE_TYPE: { CL_DEVICE_TYPE_CPU }
+CL_DEVICE_VENDOR_ID: 4294967295
+CL_DEVICE_MAX_COMPUTE_UNITS: 8
+...
+```
+
+
+### Library functions
+
 Select outputs from some of the info functions for reference:
 
-### ocu_image_info
+#### ocu_image_info
 
 Given `img` is an already initialized instance of `cl_mem`:
 
@@ -41,7 +70,7 @@ CL_IMAGE_NUM_MIP_LEVELS: 0
 CL_IMAGE_NUM_SAMPLES: 0
 ```
 
-### ocu_queue_info
+#### ocu_queue_info
 
 Given `queue` is an already initialized instance of `cl_command_queue`:
 
@@ -63,7 +92,7 @@ CL_QUEUE_PROPERTIES: { CL_QUEUE_PROFILING_ENABLE }
 
 ## Building
 
-This library uses cmake to generate build configurations. Please see
+This library uses CMake to generate build configurations. Please see
 [https://cmake.org/install/](https://cmake.org/install/) for system specific
 install instructions.
 
