@@ -6,6 +6,61 @@ Various utility functions to ease working with OpenCL.
 
 See [opencl_util.h](https://github.com/rhardih/opencl_util/blob/master/include/opencl_util.h) for a list of available functions.
 
+
+## Examples
+
+Select outputs from some of the info functions for reference:
+
+### ocu_image_info
+
+Given `img` is an already initialized instance of `cl_mem`:
+
+Code:
+
+```c
+ocu_image_info(img);
+```
+
+Output:
+
+```
+Image info for cl_mem 0x7fb03f9443a0 :
+CL_IMAGE_FORMAT: {
+  image_channel_order: CL_RGBA
+  image_channel_data_type: CL_UNORM_INT8
+}
+CL_IMAGE_ELEMENT_SIZE: 4
+CL_IMAGE_ROW_PITCH: 7680
+CL_IMAGE_SLICE_PITCH: 0
+CL_IMAGE_WIDTH: 1920
+CL_IMAGE_HEIGHT: 1080
+CL_IMAGE_DEPTH: 0
+CL_IMAGE_ARRAY_SIZE: 0
+CL_IMAGE_BUFFER: 0x7fb03f9448b0
+CL_IMAGE_NUM_MIP_LEVELS: 0
+CL_IMAGE_NUM_SAMPLES: 0
+```
+
+### ocu_queue_info
+
+Given `queue` is an already initialized instance of `cl_command_queue`:
+
+Code:
+
+```c
+ocu_image_info(queue);
+```
+
+Output:
+
+```
+Queue info for cl_command_queue 0x7fb0386ec8c0 :
+CL_QUEUE_CONTEXT: 0x7fb03f9448b0
+CL_QUEUE_DEVICE: 0x7fb03f9448b0
+CL_QUEUE_REFERENCE_COUNT: 1
+CL_QUEUE_PROPERTIES: { CL_QUEUE_PROFILING_ENABLE }
+```
+
 ## Building
 
 This library uses cmake to generate build configurations. Please see
