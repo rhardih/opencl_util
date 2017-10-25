@@ -733,3 +733,10 @@ void ocu_queue_info(cl_command_queue q)
 
   free(info);
 }
+
+void ocu_context_pfn_notify(const char *errinfo, const void *private_info,
+    size_t cb, void *user_data)
+{
+  printf("\n########## OPENCL CALLBACK ##########\n\n");
+  printf("%s", errinfo);
+}

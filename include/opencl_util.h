@@ -97,6 +97,15 @@ extern "C" {
    */
   void ocu_queue_info(cl_command_queue q);
 
+  /**
+   * ocu_context_pfn_notify
+   *
+   * Basic callback function to use as pfn_notify for clCreateContext. Prints
+   * errinfo and disregards private_info and user_data.
+   */
+  void ocu_context_pfn_notify(const char *errinfo, const void *private_info,
+      size_t cb, void *user_data);
+
 #ifdef __cplusplus
 }
 #endif
