@@ -9,6 +9,7 @@ find_library(OPENCL_LIB OpenCL PATHS ${CMAKE_CURRENT_BINARY_DIR})
 
 add_library(opencl_util SHARED src/opencl_util.c)
 target_link_libraries(opencl_util ${OPENCL_LIB})
+set_target_properties(opencl_util PROPERTIES VERSION 1.0.0)
 
 # Example program oclinf
 add_executable(oclinf src/oclinf.c)
