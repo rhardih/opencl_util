@@ -94,6 +94,8 @@ static const ocl_const_t lu_cl_error_codes[] = {
   { CL_INVALID_COMPILER_OPTIONS, "CL_INVALID_COMPILER_OPTIONS" },
   { CL_INVALID_LINKER_OPTIONS, "CL_INVALID_LINKER_OPTIONS" },
   { CL_INVALID_DEVICE_PARTITION_COUNT, "CL_INVALID_DEVICE_PARTITION_COUNT" },
+  // cl_gl
+  { CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR, "CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR" }
 };
 
 static const ocl_const_uint_t lu_cl_platform_info[] = {
@@ -479,11 +481,13 @@ static void err_common(cl_int err, const char *msg, va_list ap)
     if (lu_cl_error_codes[i].value == err)
     {
       name = lu_cl_error_codes[i].name;
-      break;
+      printf("Error (%s): ", name);
+      vprintf(msg, ap);
+      return;
     }
   }
 
-  printf("Error(%s): ", name);
+  printf("Unknown error (%d): ", err);
   vprintf(msg, ap);
 }
 

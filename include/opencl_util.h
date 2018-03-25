@@ -42,9 +42,9 @@
 #define OPENCL_INFO_H
 
 #ifdef __APPLE__
-#include <OpenCL/cl.h>
+#include <OpenCL/opencl.h>
 #else
-#include <CL/cl.h>
+#include <CL/opencl.h>
 #endif
 
 #ifdef __cplusplus
