@@ -21,6 +21,16 @@
  ******************************************************************************/
 
 /**
+ * Changelog
+ *
+ * 2018-03-25 - 1.0.0
+ *
+ * - Introduces initial versioning.
+ * - Adds Android specific printf and vprintf aliasing.
+ *
+ */
+
+/**
  *
  * opencl_util
  *

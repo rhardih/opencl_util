@@ -17,3 +17,6 @@ target_link_libraries(oclinf ${OPENCL_LIB} opencl_util)
 
 # allow 'for' loop initial declarations
 set_property(TARGET opencl_util PROPERTY C_STANDARD 99)
+
+# link to the log library included in the NDK
+target_link_libraries(opencl_util log)

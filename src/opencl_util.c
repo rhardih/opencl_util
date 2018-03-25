@@ -1,6 +1,13 @@
 #include "opencl_util.h"
 
+#ifdef __ANDROID__
+#include <android/log.h>
+#define printf(...) (__android_log_print(ANDROID_LOG_DEBUG, "opencl_util", __VA_ARGS__))
+#define vprintf(...) (__android_log_vprint(ANDROID_LOG_DEBUG, "opencl_util", __VA_ARGS__))
+#else
 #include <stdio.h>
+#endif
+
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdarg.h>
